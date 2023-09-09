@@ -1,0 +1,18 @@
+//to verify the authurized user
+const jwt=require("json-web-token");
+
+const middle_auth=async(req,res,next/*كمل بعد ما تخلص اللي بتعمله */)=>{
+    try {
+      const token=  req.header("auth_token");
+      if(!token)return res.status(401).json({msg:"Not Auth token"});//401 UN AUTHERIZED ACCESS
+      const verified=jwt.verify(token,"passwordkey");////////////////to verify id
+      if(!verified)return res.status(401).json({msg:"token verification failed"});
+      req.user=verified.id;
+      req.token=token;
+        next();
+    } catch (e) {
+      res.status(500).json({msg:"error"});
+    }
+
+};
+module.exports=middle_auth;
